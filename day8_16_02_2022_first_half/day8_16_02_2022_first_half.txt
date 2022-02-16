@@ -1,0 +1,272 @@
+Inheritance and Polymorphism
+--------------------------------------------------------------------------------------------------
+        A
+ B             C
+        D
+-----------------------------------------------------------------------------------------------
+boolean equals(Object object)
+
+    Object
+      |
+      |
+      A
+      |
+      |
+      B
+-------------------------------------------------------------------------------------------------
+Polymorphism is achieved through method overloading and method overriding. 
+
+      public class Base {
+       public static void add(){
+       System.out.println("I am thr base class add method");
+       }
+     }
+      public class Derived extends Base {
+      public static void add() {
+      System.out.println("I am the derived class add method");
+      }
+    }
+
+     public class Main {
+      public static void main(String args[]) {
+         Base.add();
+         Derived.add();
+         // So the static methods are not dependent on the object creation , the methods are 
+         // available and can be used before the object is being created.
+         Base b=new Derived(); 
+         b.add();// static can be called with object also. In this case as it is a static method
+         the method which is called is related to the class of the reference variable and not with
+         that of the object.   // I am thr base class add method 
+      }
+     }
+------------------------------------------------------------------------------------------------------
+* Abstract classes :- The class which is having one abstract method is called as an abstract class.
+* A method which is not having any body is called as an abstract class.
+* We use abstract keyword with the class and the method.
+* We never use abstract keyword with the variable or object.
+* abstract class can have both abstract methods and concrete methods ( methods with body).
+* So in our example method() is a concrete method and abstractMethod() is an abstract method.
+package infosys.demo.abstractdemos;
+* When we are inheriting or creating subclass of abstract class, abstract method of the abstract
+class needs to be overridden in the subclass . If we are not doing so we get a compilation error.
+* In the below example Derived class is not overriding the 
+abstract method of the AbstractBase
+public abstract class AbstractBase {
+   public void method()
+	  {
+		  System.out.println("Concrete method!!!!");
+	  }
+	  
+	  public abstract void abstractMethod();
+}
+
+
+  public class Derived extends AbstractBase {
+
+	  public void display()
+	  { 
+		  System.out.println("I am the derived class method");
+	  }
+}
+
+----------------------------------------------------------------------------------
+* If we dont override the abstract method in the Derived class , then we have to make the derived
+class as an abstract.Which means we are conveying to the compiler that this class too is 
+incomplete with the implementation.  
+public abstract class Derived extends AbstractBase {
+
+	  public void display()
+	  { 
+		  System.out.println("I am the derived class method");
+	  }
+}
+--------------------------------------------------------------------
+* We can declare a class as an abstract which is not having any abstract method.
+-----------------------------------------------------------------------------------------
+* We cannot create an object of abstract class. Can you tell us the reason?
+* Abstract class is incomplete. We can have certain methods without body(abstract methods).
+So if we create object of the abstract class , how we are going to execute the method which
+is not having any body. 
+    AbstractClass ac=new AbstractClass();
+    ac.abstractMethod(); // abstract method is not having any line to execute.
+------------------------------------------------------------------------------------------------
+So to access the non abstract method we have to create the reference variable of abstract class
+and store the object of the derived class and through that we can access the non abstract methods.
+
+   public abstract Base {
+    public void display(){
+     System.out.println("Non abstract method");
+    }
+    abstract public void abstractDisplay();
+   }
+
+
+   public class Derived extends Base {
+
+    public void derivedDisplay() {
+    System.out.println("I am the derived class display method");
+    }
+    public void abstractDisplay() {
+    System.out.println("I am overriding the abstract method of the abstract class");
+    }
+   }
+
+   public class Main {
+     public static void main(String args[]) {
+     // Base b=new Base();
+     Base b=new Derived();
+     b.display(); // The abstract class display method will be called.
+     b.abstractDisplay(); // The implelemented method of the derived class will be called
+     b.derivedDisplay(); // compilation error as we dont have a mention of the method in the base      class 
+     ((Derived)b).derivedDisplay();
+     Derived d=(Derived)b;
+     d.derivedDisplay();
+     Derived d2=new Derived();
+     d2.display(); // display from the base
+     d2.abstractDisplay(); // The overridden method in the sub class
+     d2.derivedDisplay(); // The method which is specific to the derived class
+}
+  }    
+  
+* abstract method cannot be private as we dont override private methods. private methods are private
+to the class where they are declared and not even accessible in the derived classes. So we 
+can override the private method in the subclass.
+------------------------------
+* Interfaces prior to java 8 can have abstract methods only.But from java8 interfaces
+contains 3 types of method declaration.
+  ** abstract methods
+  ** default methods
+  ** static methods
+package infosys.demos.interfacedemo1;
+// Interface methods are with public access 
+public interface ICalculator {
+	int add(int a, int b); // abstract methods
+	int subtract(int a, int b); 
+}
+ 
+* Interfaces needs to be implemented by a class. There is no 
+  use of interfaces if we create and don't implement interfaces.
+* The class implementing the interface should override all the
+  abstract methods of the interface otherwise the sublclass 
+  has to be defined as abstract class. 
+
+package infosys.demos.interfacedemo1;
+
+public class Number implements ICalculator {
+  private int num1;
+  private int num2;
+	@Override
+	public int add(int a, int b) {
+		num1=a;
+		num2=b;
+		int sum=a+b;
+		return sum;
+	}
+
+	// @Override
+	public int subtract(int a, int b) {
+		num1=a;
+		num2=b;
+		int subtract=a-b;
+		return subtract;
+	} 
+
+}
+---------------------------------------------------------
+In interfaces also we cannot create an object of the interface but we 
+can create a reference variable of interfaces and can store the address of the object of the
+class which has implemented the interface. As the interface
+contains abstract method which cannot be called with the object.
+  
+ * A class can extend one class but it can implement multiple interfaces
+   
+    public interface Interface1 {
+
+    }
+
+   public interface Interface2 {
+
+   }
+ 
+   public class Base {}
+
+   public class Derived extends Base implements Interface1,Interface2
+   {}
+
+-------------------------------------------------------------------
+Using abstract class we should have parent child relationship (Inheritance) but with interface we dont
+look for parent child relationship. 
+Doctor , Teacher , Manager and all of them are good Musician  playInstrument()
+   interface Player {
+    playingAGame();
+   }   
+
+  interface Musician {
+   playInstrument();
+   }
+
+  class Doctor implements Musician,Player {
+
+   public void toMedicate(){
+    System.out.println("Will treat patients");
+   }
+   public void playInstrument(){
+    System.out.println("Playing flute");
+   } 
+   public void playingAGame() {
+   System.out.println("Playing a game");
+   
+  }
+
+  class Teacher implements Musician {
+
+   public void toTeach(){
+    System.out.println("Will teach");
+   }
+   public void playInstrument(){
+    System.out.println("Playing Tabla");
+   } 
+  }
+
+  class Manager implements Musician {
+
+   public void toManage(){
+    System.out.println("Will manage");
+   }
+   public void playInstrument(){
+    System.out.println("Playing Saxaphone");
+   } 
+  }
+
+   Doctor doctor=new Doctor();
+   doctor.toMedicate();
+   doctor.playInstrument(); 
+   Musician musician=doctor;
+   musician.playInstrument();
+   musician.toMedicate(); // No 
+   Teacher teacher=new Teacher();
+   teacher.toTeach();
+   musician=teacher;
+   musician.toTeach();
+   musician.playInstrument();
+   Player player=doctor;
+   player.playingAGame();
+   player.playInstrument(); // No
+--------------------------------------------------------------
+* private,default,protected and public are accessible in the same class.
+* From non derived class we cannot access private member but all other access specifiers are
+  accessible.
+* From Derived/sub class we cannot access the private member but we call access rest of the 
+  members of other access specifiers.
+* From non derived class different package we can access only the public member.
+* From Derived/sub class different package we can access protected and public members.
+----------------------------------------------------------------------------------------------
+private=====>default=======>protected========>public
+(most restrictive)                            (least restrictive)
+-------------------------------------------------------------------------------------------
+A class can have only default and public access specifier. So if it is default , the class
+cannot be accessed from other packages where as class declared as public can be accessed from
+same and different packages.
+---------------------------------------------------------------------------------------
+
+   
